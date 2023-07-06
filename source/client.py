@@ -49,7 +49,8 @@ class Client:
     def parse(self, urls):
         try:
             result = pd.DataFrame({'Ссылка': [], "Просмотры": []})
-            for url in urls:
+            for i, url in enumerate(urls):
+                print(f'Парсинг {i + 1}/{len(urls)}')
                 self.driver.get(url)
                 views = self.driver.find_element(By.CLASS_NAME, 'bold.style-scope.yt-formatted-string')
                 result.loc[len(result)] = [url, self.format_views(views.text)]
