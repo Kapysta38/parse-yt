@@ -37,14 +37,12 @@ class Client:
         self.driver.implicitly_wait(5)
         self.driver.set_window_size(1920, 1080)
 
-    @staticmethod
-    def format_views(views):
-        if 'тыс.' in views:
-            return int(views.split('тыс.')[0].strip()) * 1000
-        elif 'млн' in views:
-            return float(views.split('млн')[0].strip().replace(',', '.')) * 1000000
-        else:
-            return int(views.split('просмотр')[0].replace(' ', ''))
+    def get_views(self):
+        metas = self.driver.find_elements(By.TAG_NAME, 'meta')
+        for meta in metas:
+            if meta.get_attribute('itemprop') == 'interactionCount':
+                return int(meta.get_attribute('content'))
+        return 0
 
     def parse(self, urls):
         try:
@@ -52,8 +50,8 @@ class Client:
             for i, url in enumerate(urls):
                 print(f'Парсинг {i + 1}/{len(urls)}')
                 self.driver.get(url)
-                views = self.driver.find_element(By.CLASS_NAME, 'bold.style-scope.yt-formatted-string')
-                result.loc[len(result)] = [url, self.format_views(views.text)]
+
+                result.loc[len(result)] = [url, self.get_views()]
             return result
         except Exception as ex:
             log.error({'error': ex, 'traceback': traceback.format_exc()})
