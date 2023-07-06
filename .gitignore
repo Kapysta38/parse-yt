@@ -5,3 +5,6 @@ source/cookie
 source/__pycache__/
 *.rar
 *.xlsx
+*.spec
+source/dist
+source/build
