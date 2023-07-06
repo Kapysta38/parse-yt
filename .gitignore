@@ -8,3 +8,4 @@ source/__pycache__/
 *.spec
 source/dist
 source/build
+*.exe
